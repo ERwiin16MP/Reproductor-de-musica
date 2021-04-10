@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/Compartir"
+        android:title="@string/Compartir"/>
+    <item
+        android:id="@+id/Calificar"
+        android:title="@string/Calificar"/>
+    <item
+        android:id="@+id/Mas"
+        android:title="@string/Mas_aplicaciones"/>
+    <item
+        android:id="@+id/Apoyar"
+        android:title="@string/Apoyar"/>
+    <item
+        android:id="@+id/Acerca_de"
+        android:title="@string/Acerca_de"/>
+    <item
+        android:id="@+id/Reproduciendo"
+        android:title="@string/ReproduciendoAhora"
+        app:showAsAction="always"
+        android:icon="@drawable/reproduciendo"/>
+    <item
+        android:id="@+id/Ajustes"
+        android:title="@string/Ajustes"/>
+</menu>

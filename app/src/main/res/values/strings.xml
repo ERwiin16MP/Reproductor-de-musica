@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name" translatable="false">Reproductor de música</string>
+    <string name="Correo">erwinmartinezperez@gmail.com</string>
+    <string name="ERwiin16MP">ERwiin 16 MP</string>
+    <string name="SolicitudDePermiso">Solicitud de permiso</string>
+    <string name="LaAplicacionNo">La aplicación no puede funcionar si usted no concede el permiso de leer sus canciones ☺</string>
+    <string name="Vale">Vale</string>
+    <string name="Cancion">Canción</string>
+    <string name="ReproduciendoAhora">Reproduciendo ahora</string>
+    <string name="Compartir">Compartir</string>
+    <string name="Calificar">Calificar app</string>
+    <string name="Mas_aplicaciones">Más aplicaciones</string>
+    <string name="Apoyar">Apoyar al desarrollador</string>
+    <string name="Acerca_de">Acerca de</string>
+    <string name="UnSimple">"Un simple reproductor de música: "</string>
+    <string name="Reporte">Reporte de fallos y solicitud de nuevas funciones:</string>
+    <string name="ParaApoyar">Para apoyar al desarrollador de la app, puede ver un anuncio</string>
+    <string name="No">No</string>
+    <string name="Error">Ha ocurrido algun error inesperado :/</string>
+    <string name="Detalles">Detalles</string>
+    <string name="Titulo">Título</string>
+    <string name="Artista">Artista</string>
+    <string name="Url">Url</string>
+    <string name="BuscarLetra">Buscar letra</string>
+    <string name="Notificacion">Notificación de audio</string>
+    <string name="Ajustes">Ajustes</string>
+    <string name="title_activity_ajustes">Ajustes</string>
+    <string name="Canciones">Canciones</string>
+    <string name="OcultarAUD">Ocultar audios de WhatsApp</string>
+    <string name="OcultarAUD_Explicacion">Por lo general, son los audios que terminan en .m4a o .opus</string>
+    <string name="RecargarCanciones">Recargar canciones</string>
+    <string name="Para">Para ver los efectos, reinicie la aplicación :)</string>
+</resources>
