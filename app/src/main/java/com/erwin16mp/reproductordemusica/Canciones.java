@@ -1,16 +1,24 @@
 package com.erwin16mp.reproductordemusica;
 
 public class Canciones {
+    private final String Url;
     private final String Titulo;
     private final String Artista;
-    private final String Url;
+    private final String Album;
     private final String Duracion;
+    private final int Imagen;
 
-    public Canciones(String titulo, String artista, String url, String duracion) {
+    public Canciones(String url, String titulo, String artista, String album, String duracion, int imagen) {
+        Url = url;
         Titulo = titulo;
         Artista = artista;
-        Url = url;
+        Album = album;
         Duracion = duracion;
+        Imagen = imagen;
+    }
+
+    public String getUrl() {
+        return Url;
     }
 
     public String getTitulo() {
@@ -21,11 +29,15 @@ public class Canciones {
         return Artista;
     }
 
-    public String getUrl() {
-        return Url;
+    public String getAlbum() {
+        return Album;
     }
 
     public String getDuracion() {
         return Duracion;
+    }
+
+    public int getImagen() {
+        return Imagen;
     }
 }

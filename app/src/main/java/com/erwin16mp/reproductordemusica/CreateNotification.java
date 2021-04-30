@@ -20,11 +20,11 @@ public class CreateNotification {
     public static final String ACTION_NEXT = "actionnext";
     public static Notification notification;
 
-    public static void createNotification(Context context, Track track, int playbutton) {
+    public static void createNotification(Context context, Canciones canciones, int playbutton) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
             MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
-            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), track.getImage());
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), canciones.getImagen());
 
             PendingIntent Anterior = PendingIntent.getBroadcast(context, 0, new Intent(context, NotificationActionService.class).setAction(ACTION_PREVIUOS), PendingIntent.FLAG_UPDATE_CURRENT);
             PendingIntent PlayPause = PendingIntent.getBroadcast(context, 0, new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY), PendingIntent.FLAG_UPDATE_CURRENT);
@@ -33,8 +33,8 @@ public class CreateNotification {
 
             notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.drawable.reproduciendo)
-                    .setContentTitle(track.getTittle())
-                    .setContentText(track.getArtist())
+                    .setContentTitle(canciones.getTitulo())
+                    .setContentText(canciones.getArtista())
                     .setLargeIcon(bitmap)
                     .setOnlyAlertOnce(true)
                     .setShowWhen(false)

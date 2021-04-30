@@ -1,12 +1,27 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string name="Rojo">Rojo</string>
+    <string name="Morado">Morado</string>
+    <string name="Azul">Azul</string>
+    <string name="Verde">Verde</string>
+    <string name="Amarillo">Amarillo</string>
+    <string name="Naranja">Naranja</string>
+    <string name="Café">Café</string>
+    <string-array name="Temas_Values">
+        <item>Rojo</item>
+        <item>Morado</item>
+        <item>Azul</item>
+        <item>Verde</item>
+        <item>Amarillo</item>
+        <item>Naranja</item>
+        <item>Café</item>
     </string-array>
-
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="Temas">
+        <item>@string/Rojo</item>
+        <item>@string/Morado</item>
+        <item>@string/Azul</item>
+        <item>@string/Verde</item>
+        <item>@string/Amarillo</item>
+        <item>@string/Naranja</item>
+        <item>@string/Café</item>
     </string-array>
 </resources>

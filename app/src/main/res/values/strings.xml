@@ -30,4 +30,7 @@
     <string name="OcultarAUD_Explicacion">Por lo general, son los audios que terminan en .m4a o .opus</string>
     <string name="RecargarCanciones">Recargar canciones</string>
     <string name="Para">Para ver los efectos, reinicie la aplicación :)</string>
+    <string name="Apariencia">Apariencia</string>
+    <string name="TemaDeLaAplicacion">Tema de la aplicación</string>
+    <string name="Aleatorio">Aleatorio</string>
 </resources>

@@ -7,4 +7,14 @@
             app:key="OCULTAR_AUD"
             app:summary="@string/OcultarAUD_Explicacion"/>
     </PreferenceCategory>
+    <PreferenceCategory
+        app:title="@string/Apariencia">
+        <ListPreference
+            app:entries="@array/Temas"
+            app:key="Tema"
+            app:defaultValue="Rojo"
+            app:title="@string/TemaDeLaAplicacion"
+            app:useSimpleSummaryProvider="true"
+            app:entryValues="@array/Temas_Values"/>
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -1,9 +1,12 @@
 package com.erwin16mp.reproductordemusica;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,6 +41,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 
 import org.jetbrains.annotations.NotNull;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Random;
 import static com.erwin16mp.reproductordemusica.Reproductor.notificationManager;
@@ -55,39 +59,46 @@ public class Index extends AppCompatActivity {
     private static final String ALEATORIO = "Aleatorio";
     private static final String REPRODUCIENDO = "Reproduciendo";
     private static final String OCULTAR_AUD = "OCULTAR_AUD";
+    private static final String TEMA = "Tema";
+    private static final int AJUSTES_CODIGO = 111;
     private final Win win = new Win();
-    private ListView ListaDeCanciones;
+    private RecyclerView ListaDeCanciones;
     private TextView Label_Titulo, Label_Artista, Label_Duracion;
     private ImageView ImageView_Album;
     private MediaMetadataRetriever[] retriever;
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
     private Boolean AUD;
-    private ArrayList<Canciones> Canciones;
+    static ArrayList<Canciones> Canciones;
     private int Titulo, Artista, Url, Duracion;
     private String[] Titulos, Artistas, Urls, Duraciones;
+    SharedPreferences preferences;
+    MusicaAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTema();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.index);
 
         inicializarVistas();
         cargarConfiguraciones();
         cargarAnuncios();
-        buscarCanciones();
+        Canciones = buscarCanciones(this);
+        if (!(Canciones.size()<1)) {
+            adapter = new MusicaAdapter(getApplicationContext(), Canciones);
+            ListaDeCanciones.setAdapter(adapter);
+            ListaDeCanciones.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
+        }
     }
 
     private void cargarConfiguraciones() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         AUD = preferences.getBoolean(OCULTAR_AUD, false);
     }
 
     private void cargarAnuncios() {
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
+        MobileAds.initialize(this, initializationStatus -> {
         });
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -103,94 +114,30 @@ public class Index extends AppCompatActivity {
         });
     }
 
-    private void buscarCanciones() {
-        String[] information = {MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.TRACK, MediaStore.Audio.Media.YEAR, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.TITLE_KEY, MediaStore.Audio.Media.ARTIST_ID, MediaStore.Audio.Media.ARTIST};
-        final String orderBy = MediaStore.Audio.Media.TITLE;
-        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, information, null, null, orderBy);
-
-        Titulo = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-        Artista = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-        Url = cursor.getColumnIndex(MediaStore.Audio.Media.DATA);
-        Duracion = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
-
-        Canciones = new ArrayList<>();
-        Log.e("AUD", String.valueOf(AUD));
-        if (AUD) {
-            while (cursor.moveToNext()) {
-                String s = cursor.getString(Url);
-                String s1 = String.valueOf(s.charAt(s.length() - 1));
-                if (!("a".equalsIgnoreCase(s1) || "s".equalsIgnoreCase(s1))) {
-                    llenarInformacion(cursor);
-                }
+    public static ArrayList<Canciones> buscarCanciones(Context context) {
+        ArrayList<Canciones> canciones = new ArrayList<>();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String []projection = {
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.ARTIST
+        };
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        if (cursor !=null){
+            while (cursor.moveToNext()){
+                String album = cursor.getString(0);
+                String titulo = cursor.getString(1);
+                String duracion = cursor.getString(2);
+                String url = cursor.getString(3);
+                String artista = cursor.getString(4);
+                Log.e("URL: "+ url, "Album: "+album);
+                canciones.add(new Canciones(url, titulo, artista,album, duracion, R.drawable.reproduciendo));
             }
-        } else {
-            while (cursor.moveToNext()) {
-                llenarInformacion(cursor);
-            }
+            cursor.close();
         }
-
-        Titulos = new String[Canciones.size()];
-        Artistas = new String[Canciones.size()];
-        Urls = new String[Canciones.size()];
-        Duraciones = new String[Canciones.size()];
-
-        for (int i = 0; i < Canciones.size(); i++) {
-            Titulos[i] = Canciones.get(i).getTitulo();
-            Artistas[i] = Canciones.get(i).getArtista();
-            Urls[i] = Canciones.get(i).getUrl();
-            Duraciones[i] = Canciones.get(i).getDuracion();
-        }
-
-        retriever = new MediaMetadataRetriever[Canciones.size()];
-        for (int i = 0; i < Canciones.size(); i++) {
-            retriever[i] = new MediaMetadataRetriever();
-            retriever[i].setDataSource(String.valueOf(Canciones.get(i).getUrl()));
-        }
-        cursor.close();
-        ListaDeCanciones.setAdapter(new AudioAdapter());
-    }
-
-    private void llenarInformacion(@NotNull Cursor cursor) {
-        Canciones.add(new Canciones(
-                cursor.getString(Titulo),
-                cursor.getString(Artista),
-                cursor.getString(Url),
-                cursor.getString(Duracion)
-        ));
-    }
-
-    public class AudioAdapter extends BaseAdapter {
-
-        private final LayoutInflater inflater;
-
-        public AudioAdapter() {
-            inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public int getCount() {
-            return Canciones.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
-            view = inflater.inflate(R.layout.cancion, null);
-            inicializarVistasCanciones(view);
-            setDatosCanciones(position);
-            win.obtenerImagen(getApplicationContext(), ImageView_Album, retriever, position);
-            ListaDeCanciones.setOnItemClickListener((parent1, view1, position1, id) -> startActivity(enviarDatos(position1, DIRECTO)));
-            return view;
-        }
+        return canciones;
     }
 
     private void setDatosCanciones(int position) {
@@ -223,7 +170,8 @@ public class Index extends AppCompatActivity {
     }
 
     private void inicializarVistas() {
-        ListaDeCanciones = findViewById(R.id.ListView_ListaDeCanciones);
+        ListaDeCanciones = findViewById(R.id.ListaDeCanciones);
+        ListaDeCanciones.setHasFixedSize(true);
     }
 
     @Override
@@ -267,7 +215,7 @@ public class Index extends AppCompatActivity {
                 startActivity(enviarDatos(0, REPRODUCIENDO));
                 break;
             case R.id.Ajustes:
-                startActivity(new Intent(this, Ajustes.class));
+                startActivityForResult(new Intent(this, Ajustes.class), AJUSTES_CODIGO);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -280,8 +228,18 @@ public class Index extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            notificationManager.cancelAll();
+            if (notificationManager!=null){
+                Reproductor.notificationManager.cancelAll();
+            }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==AJUSTES_CODIGO){
+            this.recreate();
+        }
     }
 
     private void guardarString(String Key, String Value) {
@@ -309,5 +267,27 @@ public class Index extends AppCompatActivity {
 
     private boolean getConfiguracionBoolean(String Key, Boolean defValue) {
         return getPreferences(Context.MODE_PRIVATE).getBoolean(Key, defValue);
+    }
+
+    private void setTema() {
+        preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        switch (preferences.getString(TEMA, "Rojo")) {
+            case "Rojo":
+                setTheme(R.style.Rojo);
+                break;
+            case "Morado":
+                setTheme(R.style.Morado);
+                break;
+            case "Azul":
+                break;
+            case "Verde":
+                break;
+            case "Amarillo":
+                break;
+            case "Naranja":
+                break;
+            case "Café":
+                break;
+        }
     }
 } // 304 -> 256 -> 239
