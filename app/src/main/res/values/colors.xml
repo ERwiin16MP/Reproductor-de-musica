@@ -5,7 +5,7 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#B71C1C</color>
+    <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
 
     <color name="PrimaryRojo">#F44336</color>
@@ -15,4 +15,12 @@
     <color name="PrimaryAmarillo">#FFEB3B</color>
     <color name="PrimaryNaranja">#FF9800</color>
     <color name="PrimaryCafé">#765548</color>
+
+    <color name="StatusBarRojo">#D50000</color>
+    <color name="StatusBarMorado">#4A148C</color>
+    <color name="StatusBarAzul">#0D47A1</color>
+    <color name="StatusBarVerde">#1B5E20</color>
+    <color name="StatusBarAmarillo">#FDD835</color>
+    <color name="StatusBarNaranja">#E65100</color>
+    <color name="StatusBarCafé">#3E2723</color>
 </resources>

@@ -42,7 +42,7 @@
             android:layout_marginHorizontal="16dp"
             android:text="Esto es el titulo de la canción"
             android:gravity="center_horizontal"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="20dp"/>
 
         <TextView
@@ -76,8 +76,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/TextView_Cancion"
-            android:progressTint="#0288D1"
-            android:thumbTint="#0288D1"
             android:layout_marginTop="20dp"/>
 
         <TextView
@@ -111,7 +109,7 @@
                 android:id="@+id/Button_PlayPause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@android:color/black"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/play"/>

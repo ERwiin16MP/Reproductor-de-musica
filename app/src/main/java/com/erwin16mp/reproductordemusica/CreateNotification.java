@@ -24,7 +24,7 @@ public class CreateNotification {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
             MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
-            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), canciones.getImagen());
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.musica);
 
             PendingIntent Anterior = PendingIntent.getBroadcast(context, 0, new Intent(context, NotificationActionService.class).setAction(ACTION_PREVIUOS), PendingIntent.FLAG_UPDATE_CURRENT);
             PendingIntent PlayPause = PendingIntent.getBroadcast(context, 0, new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY), PendingIntent.FLAG_UPDATE_CURRENT);

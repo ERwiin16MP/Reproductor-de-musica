@@ -6,6 +6,7 @@
     <string name="Amarillo">Amarillo</string>
     <string name="Naranja">Naranja</string>
     <string name="Café">Café</string>
+
     <string-array name="Temas_Values">
         <item>Rojo</item>
         <item>Morado</item>
@@ -15,6 +16,7 @@
         <item>Naranja</item>
         <item>Café</item>
     </string-array>
+
     <string-array name="Temas">
         <item>@string/Rojo</item>
         <item>@string/Morado</item>

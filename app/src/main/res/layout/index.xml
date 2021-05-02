@@ -12,24 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/R2"
-            android:layout_width="match_parent"
-            android:layout_marginHorizontal="16dp"
-            android:layout_height="wrap_content"
-            android:onClick="aleatorio"
-            android:background="@color/PrimaryMorado"
-            android:textColor="@android:color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:drawableStart="@drawable/aleatorio_blanco"
-            android:text="@string/Aleatorio"/>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ListaDeCanciones"
-            android:layout_below="@+id/R2"
             android:layout_height="match_parent"
             android:layout_width="match_parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/Button_Aleatorio_Index"
+            android:layout_width="wrap_content"
+            android:onClick="aleatorio"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:fabSize="normal"
+            app:elevation="4dp"
+            android:src="@drawable/aleatorio_blanco"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 

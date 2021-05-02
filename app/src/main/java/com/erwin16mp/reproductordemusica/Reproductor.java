@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,23 +37,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.erwin16mp.reproductordemusica.Index.Archivos;
+
 public class Reproductor extends AppCompatActivity implements MediaPlayer.OnCompletionListener, Playable {
 
-    private static final String TITULOS = "Titulos";
-    private static final String ARTISTAS = "Artistas";
-    private static final String URLS = "Urls";
-    private static final String DURACIONES = "Duraciones";
     private static final String CANCION_REPRODUCIENDO = "CancionReproduciendo";
     private static final String SALIDA = "Salida";
     private static final String DIRECTO = "Directo";
     private static final String ALEATORIO = "Aleatorio";
     private static final String REPETIR = "Repetir";
     private static final String REPRODUCIENDO = "Reproduciendo";
-    private static final String canciones_canciones = "canciones_canciones";
+    private static final String Canciones_Canciones = "Canciones_Canciones";
     private static final String TEMA = "Tema";
     private final Win win = new Win();
-    private static int NumeroDeTitulos;
-    private static String[] Titulos, Artistas, Urls, Duraciones;
     private static int CancionReproduciendo;
     private ImageView Album;
     private TextView Label_Titulo, Label_Artista, Label_Cancion, Label_Tiempo1, Label_Tiempo2;
@@ -64,8 +61,9 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
     private Button Button_Aleatorio, Button_Anterior, Button_Siguiente, Button_Repetir;
     private Boolean Aleatorio, Repetir;
     public static NotificationManager notificationManager;
-    private static List<Canciones> canciones;
-    private int TiempoActual;
+    static ArrayList<Canciones> Canciones;
+    private int TiempoActual, NumeroDeCanciones;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,20 +100,20 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
                     Musica.stop();
                     Musica.release();
                 }
-                Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Urls[CancionReproduciendo])))));
+                Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Canciones.get(CancionReproduciendo).getUrl())))));
                 Musica.start();
                 Button_PlayPause.setImageResource(R.drawable.pause);
-                CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.pause);
+                CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.pause);
                 break;
             case REPRODUCIENDO:
                 if (Musica.isPlaying()) {
                     Button_PlayPause.setImageResource(R.drawable.pause);
                     Musica.setOnCompletionListener(this);
                     BarraDeProgreso.setMax(Musica.getDuration() / 1000);
-                    CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.pause);
+                    CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.pause);
                 } else {
-                    Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Urls[CancionReproduciendo])))));
-                    CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.play);
+                    Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Canciones.get(CancionReproduciendo).getUrl())))));
+                    CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.play);
                 }
                 break;
             case ALEATORIO:
@@ -124,10 +122,10 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
                     Musica.stop();
                     Musica.release();
                 }
-                Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Urls[CancionReproduciendo])))));
+                Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Canciones.get(CancionReproduciendo).getUrl())))));
                 Musica.start();
                 Button_PlayPause.setImageResource(R.drawable.pause);
-                CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.pause);
+                CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.pause);
                 Aleatorio = true;
                 guardarBoolean(ALEATORIO, true);
                 Button_Aleatorio.setBackgroundResource(R.drawable.aleatorio_1);
@@ -136,6 +134,7 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
         Musica.setOnCompletionListener(this);
         BarraDeProgreso.setMax(Musica.getDuration() / 1000);
         setDatos();
+        
     }
 
     private void reloj() {
@@ -153,6 +152,7 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
     }
 
     private void cargarConfiguraciones() {
+        preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         Aleatorio = getConfiguracionBoolean(ALEATORIO, false);
         Repetir = getConfiguracionBoolean(REPETIR, false);
         if (Aleatorio)
@@ -210,25 +210,25 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
     private void Anterior() {
         if (Musica.isPlaying()) {
             if (Aleatorio && !Repetir)
-                CancionReproduciendo = new Random().nextInt(NumeroDeTitulos + 1);
+                CancionReproduciendo = new Random().nextInt(NumeroDeCanciones + 1);
             else if (!Aleatorio && !Repetir)
-                CancionReproduciendo = ((CancionReproduciendo - 1) < 0 ? (NumeroDeTitulos - 1) : (CancionReproduciendo - 1));
+                CancionReproduciendo = ((CancionReproduciendo - 1) < 0 ? (NumeroDeCanciones - 1) : (CancionReproduciendo - 1));
             Musica.stop();
             Musica.release();
-            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Urls[CancionReproduciendo])))));
+            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Canciones.get(CancionReproduciendo).getUrl())))));
             Button_PlayPause.setBackgroundResource(R.drawable.pause);
-            CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.pause);
+            CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.pause);
             Musica.start();
         } else {
             if (Aleatorio && !Repetir)
-                CancionReproduciendo = new Random().nextInt(NumeroDeTitulos + 1);
+                CancionReproduciendo = new Random().nextInt(NumeroDeCanciones + 1);
             else if (!Aleatorio && !Repetir)
-                CancionReproduciendo = ((CancionReproduciendo - 1) < 0 ? (NumeroDeTitulos - 1) : (CancionReproduciendo - 1));
+                CancionReproduciendo = ((CancionReproduciendo - 1) < 0 ? (NumeroDeCanciones - 1) : (CancionReproduciendo - 1));
             Musica.stop();
             Musica.release();
-            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Urls[CancionReproduciendo])))));
+            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Canciones.get(CancionReproduciendo).getUrl())))));
             Button_PlayPause.setBackgroundResource(R.drawable.play);
-            CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.play);
+            CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.play);
         }
         BarraDeProgreso.setMax(Musica.getDuration() / 1000);
         Musica.setOnCompletionListener(this);
@@ -257,23 +257,23 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
             Musica.stop();
             Musica.release();
             if (Aleatorio && !Repetir)
-                CancionReproduciendo = new Random().nextInt(NumeroDeTitulos + 1);
+                CancionReproduciendo = new Random().nextInt(NumeroDeCanciones + 1);
             else if (!Aleatorio && !Repetir)
-                CancionReproduciendo = ((CancionReproduciendo + 1) % NumeroDeTitulos);
-            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Urls[CancionReproduciendo])))));
+                CancionReproduciendo = ((CancionReproduciendo + 1) % NumeroDeCanciones);
+            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Canciones.get(CancionReproduciendo).getUrl())))));
             Button_PlayPause.setBackgroundResource(R.drawable.pause);
-            CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.pause);
+            CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.pause);
             Musica.start();
         } else {
             Musica.stop();
             Musica.release();
             if (Aleatorio && !Repetir)
-                CancionReproduciendo = new Random().nextInt(NumeroDeTitulos + 1);
+                CancionReproduciendo = new Random().nextInt(NumeroDeCanciones + 1);
             else if (!Aleatorio && !Repetir)
-                CancionReproduciendo = ((CancionReproduciendo + 1) % NumeroDeTitulos);
-            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Urls[CancionReproduciendo])))));
+                CancionReproduciendo = ((CancionReproduciendo + 1) % NumeroDeCanciones);
+            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Canciones.get(CancionReproduciendo).getUrl())))));
             Button_PlayPause.setBackgroundResource(R.drawable.play);
-            CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.play);
+            CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.play);
         }
         BarraDeProgreso.setMax(Musica.getDuration() / 1000);
         Musica.setOnCompletionListener(this);
@@ -300,11 +300,11 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
     private void PlayPause() {
         if (Musica.isPlaying()) {
             Button_PlayPause.setImageResource(R.drawable.play);
-            CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.play);
+            CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.play);
             Musica.pause();
         } else {
             Button_PlayPause.setImageResource(R.drawable.pause);
-            CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.pause);
+            CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.pause);
             Musica.start();
         }
         BarraDeProgreso.setMax(Musica.getDuration() / 1000);
@@ -314,34 +314,29 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
 
     private void setDatos() {
         Label_Tiempo2.setText(win.tiempo(Musica.getDuration() / 1000));
-        Label_Titulo.setText(Titulos[CancionReproduciendo]);
-        Label_Artista.setText(Artistas[CancionReproduciendo]);
-        Label_Cancion.setText(getString(R.string.Cancion) + ": " + (CancionReproduciendo + 1) + "/" + NumeroDeTitulos);
+        Label_Titulo.setText(Canciones.get(CancionReproduciendo).getTitulo());
+        Label_Artista.setText(Canciones.get(CancionReproduciendo).getArtista());
+        Label_Cancion.setText(getString(R.string.Cancion) + ": " + (CancionReproduciendo + 1) + "/" + NumeroDeCanciones);
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(Urls[CancionReproduciendo]);
+        retriever.setDataSource(Canciones.get(CancionReproduciendo).getUrl());
         byte[] art = retriever.getEmbeddedPicture();
         if (art != null) {
             Glide.with(getApplicationContext()).asBitmap().load(art).into(Album);
-        }
+        } else Glide.with(getApplicationContext()).asBitmap().load(R.mipmap.musica).into(Album);
         Label_Titulo.setSelected(true);
         Label_Artista.setSelected(true);
         if (Musica.isPlaying())
-            CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.pause);
+            CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.pause);
         guardarInt(CANCION_REPRODUCIENDO, CancionReproduciendo);
     }
 
     private void recuperarDatos() {
-        Titulos = getIntent().getExtras().getStringArray(TITULOS);
-        Artistas = getIntent().getExtras().getStringArray(ARTISTAS);
-        Urls = getIntent().getExtras().getStringArray(URLS);
-        Duraciones = getIntent().getExtras().getStringArray(DURACIONES);
-        NumeroDeTitulos = Urls.length;
-        canciones = new ArrayList<>();
-        for (int i = 0; i < NumeroDeTitulos; i++)
-            canciones.add(new Canciones(Urls[CancionReproduciendo], Titulos[CancionReproduciendo], Artistas[CancionReproduciendo], "", "", R.drawable.reproduciendo));
+        CancionReproduciendo = getIntent().getIntExtra(CANCION_REPRODUCIENDO, 0);
+        Canciones = Archivos;
+        NumeroDeCanciones = Canciones.size();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel();
-            registerReceiver(broadcastReceiver, new IntentFilter(canciones_canciones));
+            registerReceiver(broadcastReceiver, new IntentFilter(Canciones_Canciones));
             startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         }
         Aleatorio = getConfiguracionBoolean(ALEATORIO, false);
@@ -385,10 +380,10 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
     public void onCompletion(MediaPlayer mp) {
         Siguiente();
         if (Musica != null) {
-            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Urls[CancionReproduciendo])))));
+            Musica = MediaPlayer.create(Reproductor.this, Uri.fromFile(new File(String.valueOf(Uri.parse(Canciones.get(CancionReproduciendo).getUrl())))));
             Musica.start();
             Musica.setOnCompletionListener(this);
-            CreateNotification.createNotification(Reproductor.this, canciones.get(CancionReproduciendo), R.drawable.pause);
+            CreateNotification.createNotification(Reproductor.this, Canciones.get(CancionReproduciendo), R.drawable.pause);
         }
     }
 
@@ -402,12 +397,12 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
         switch (item.getItemId()) {
             case R.id.Detalles:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(getString(R.string.Detalles) + ": " + Titulos[CancionReproduciendo])
-                        .setMessage(this.getString(R.string.Titulo) + ": " + Titulos[CancionReproduciendo] + "\n\n" + this.getString(R.string.Artista) + ": " + Artistas[CancionReproduciendo] + "\n\n" + this.getString(R.string.Url) + ": " + Urls[CancionReproduciendo])
+                builder.setTitle(getString(R.string.Detalles) + ": " + Canciones.get(CancionReproduciendo).getTitulo())
+                        .setMessage(this.getString(R.string.Titulo) + ": " + Canciones.get(CancionReproduciendo).getTitulo() + "\n\n" + this.getString(R.string.Artista) + ": " + Canciones.get(CancionReproduciendo).getArtista() + "\n\n" + this.getString(R.string.Url) + ": " + Canciones.get(CancionReproduciendo).getUrl())
                         .setPositiveButton(R.string.Vale, null).create().show();
                 break;
             case R.id.BuscarLetra:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(("http://www.google.com/search?q=" + Titulos[CancionReproduciendo] + " - " + Artistas[CancionReproduciendo] + " letra").replace(" ", "+"))));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(("http://www.google.com/search?q=" + Canciones.get(CancionReproduciendo).getTitulo() + " - " + Canciones.get(CancionReproduciendo).getArtista() + " letra").replace(" ", "+"))));
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -473,7 +468,7 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
     }
 
     private void setTema() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         switch (preferences.getString(TEMA, "Rojo")) {
             case "Rojo":
                 setTheme(R.style.Rojo);
@@ -482,14 +477,19 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
                 setTheme(R.style.Morado);
                 break;
             case "Azul":
+                setTheme(R.style.Azul);
                 break;
             case "Verde":
+                setTheme(R.style.Verde);
                 break;
             case "Amarillo":
+                setTheme(R.style.Amarillo);
                 break;
             case "Naranja":
+                setTheme(R.style.Naranja);
                 break;
             case "Café":
+                setTheme(R.style.Cafe);
                 break;
         }
     }

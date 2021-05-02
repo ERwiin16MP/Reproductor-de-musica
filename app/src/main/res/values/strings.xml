@@ -33,4 +33,6 @@
     <string name="Apariencia">Apariencia</string>
     <string name="TemaDeLaAplicacion">Tema de la aplicación</string>
     <string name="Aleatorio">Aleatorio</string>
+    <string name="Proximamente">Proximamente</string>
+    <string name="NoTieneCanciones">No tiene canciones en el dispositivo</string>
 </resources>

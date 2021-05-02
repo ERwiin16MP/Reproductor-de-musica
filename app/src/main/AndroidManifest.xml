@@ -13,23 +13,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Rojo">
+        android:theme="@style/Morado">
         <activity
             android:name=".Ajustes"
+            android:theme="@style/Morado"
             android:label="@string/title_activity_ajustes"></activity>
         <activity
             android:name=".Reproductor"
-            android:label="@string/ReproduciendoAhora" />
+            android:label="@string/ReproduciendoAhora"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Index">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".SplashScreen"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

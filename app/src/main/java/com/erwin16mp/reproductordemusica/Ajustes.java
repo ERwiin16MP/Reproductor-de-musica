@@ -1,5 +1,6 @@
 package com.erwin16mp.reproductordemusica;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,8 +35,14 @@ public class Ajustes extends AppCompatActivity implements SharedPreferences.OnSh
     }
 
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        startActivity(new Intent(this, Index.class));
         return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        startActivity(new Intent(this, Index.class));
     }
 
     @Override
@@ -52,13 +59,10 @@ public class Ajustes extends AppCompatActivity implements SharedPreferences.OnSh
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.ajustes_xml, rootKey);
             preference = findPreference("OCULTAR_AUD");
-            preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Toast.makeText(getActivity().getApplicationContext(), R.string.Para, Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-            });
+            /*preference.setOnPreferenceClickListener(preference -> {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.Para, Toast.LENGTH_SHORT).show();
+                return true;
+            });*/
         }
     }
 
@@ -72,14 +76,19 @@ public class Ajustes extends AppCompatActivity implements SharedPreferences.OnSh
                 setTheme(R.style.Morado);
                 break;
             case "Azul":
+                setTheme(R.style.Azul);
                 break;
             case "Verde":
+                setTheme(R.style.Verde);
                 break;
             case "Amarillo":
+                setTheme(R.style.Amarillo);
                 break;
             case "Naranja":
+                setTheme(R.style.Naranja);
                 break;
             case "Café":
+                setTheme(R.style.Cafe);
                 break;
         }
     }

@@ -1,33 +1,72 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
     <!-- TEMAS -->
     <style name="Rojo" parent="Base.AppTheme.Rojo"/>
     <style name="Base.AppTheme.Rojo" parent="Theme.AppCompat.Light.DarkActionBar">
-    <!--<style name="Base.AppTheme.Rojo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">-->
-        <!-- Primary brand color. -->
         <item name="colorPrimary">@color/PrimaryRojo</item>
-        <item name="colorPrimaryVariant">@color/PrimaryRojo</item>
-        <item name="colorOnPrimary">@color/PrimaryRojo</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/PrimaryRojo</item>
-        <item name="colorSecondaryVariant">@color/PrimaryRojo</item>
-        <item name="colorOnSecondary">@color/PrimaryRojo</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="colorPrimaryDark">@color/StatusBarRojo</item>
+        <item name="android:navigationBarColor">@color/PrimaryRojo</item>
+        <item name="colorAccent">@color/PrimaryRojo</item>
+        <item name="buttonStyle">@style/Boton</item>
     </style>
+
     <style name="Morado" parent="Base.AppTheme.Morado"/>
     <style name="Base.AppTheme.Morado" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Primary brand color. -->
         <item name="colorPrimary">@color/PrimaryMorado</item>
-        <item name="colorPrimaryVariant">@color/PrimaryMorado</item>
-        <item name="colorOnPrimary">@color/PrimaryMorado</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/PrimaryMorado</item>
-        <item name="colorSecondaryVariant">@color/PrimaryMorado</item>
-        <item name="colorOnSecondary">@color/PrimaryMorado</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="colorPrimaryDark">@color/StatusBarMorado</item>
+        <item name="android:navigationBarColor">@color/PrimaryMorado</item>
+        <item name="colorAccent">@color/PrimaryMorado</item>
+        <item name="buttonStyle">@style/Boton</item>
+    </style>
+
+    <style name="Azul" parent="Base.AppTheme.Azul"/>
+    <style name="Base.AppTheme.Azul" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/PrimaryAzul</item>
+        <item name="colorPrimaryDark">@color/StatusBarAzul</item>
+        <item name="android:navigationBarColor">@color/PrimaryAzul</item>
+        <item name="colorAccent">@color/PrimaryAzul</item>
+        <item name="buttonStyle">@style/Boton</item>
+    </style>
+
+    <style name="Verde" parent="Base.AppTheme.Verde"/>
+    <style name="Base.AppTheme.Verde" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/PrimaryVerde</item>
+        <item name="colorPrimaryDark">@color/StatusBarVerde</item>
+        <item name="android:navigationBarColor">@color/PrimaryVerde</item>
+        <item name="colorAccent">@color/PrimaryVerde</item>
+        <item name="buttonStyle">@style/Boton</item>
+    </style>
+
+    <style name="Amarillo" parent="Base.AppTheme.Amarillo"/>
+    <style name="Base.AppTheme.Amarillo" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/PrimaryAmarillo</item>
+        <item name="colorPrimaryDark">@color/StatusBarAmarillo</item>
+        <item name="android:navigationBarColor">@color/PrimaryAmarillo</item>
+        <item name="colorAccent">@color/PrimaryAmarillo</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="buttonStyle">@style/Boton</item>
+    </style>
+
+    <style name="Naranja" parent="Base.AppTheme.Naranja"/>
+    <style name="Base.AppTheme.Naranja" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/PrimaryNaranja</item>
+        <item name="colorPrimaryDark">@color/StatusBarNaranja</item>
+        <item name="android:navigationBarColor">@color/PrimaryNaranja</item>
+        <item name="colorAccent">@color/PrimaryNaranja</item>
+        <item name="buttonStyle">@style/Boton</item>
+    </style>
+
+    <style name="Cafe" parent="Base.AppTheme.Cafe"/>
+    <style name="Base.AppTheme.Cafe" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/PrimaryCafé</item>
+        <item name="colorPrimaryDark">@color/StatusBarCafé</item>
+        <item name="android:navigationBarColor">@color/PrimaryCafé</item>
+        <item name="colorAccent">@color/PrimaryCafé</item>
+        <item name="buttonStyle">@style/Boton</item>
+    </style>
+
+    <!-- Items -->
+    <style name="Boton" parent="Widget.AppCompat.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">16dp</item>
     </style>
 </resources>
